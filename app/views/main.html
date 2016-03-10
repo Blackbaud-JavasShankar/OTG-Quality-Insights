@@ -65,12 +65,20 @@
       <div bb-modal-body>
         <form>
           <div class="form-group">
-            <h4>{{modalCtrl.passCount}} / {{modalCtrl.testCount}}</h4> tests are passing.
+            <bb-alert bb-alert-type="{{modalCtrl.alertStatus}}">
+              {{modalCtrl.passCount}} / {{modalCtrl.testCount}} tests are passing.
+            </bb-alert>
+
+            <div ng-if="modalCtrl.failedSteps.length > 0"
+                 ng-repeat="step in modalCtrl.failedSteps">
+              <h4>Step {{step.order}} - {{step.description}}</h4>
+              <textarea class="form-control" ng-model="step.notes" />
+            </div>
           </div>
         </form>
       </div>
       <bb-modal-footer>
-        <bb-modal-footer-button-primary>Confirm</bb-modal-footer-button-primary>
+        <bb-modal-footer-button-primary ng-click="modalCtrl.save()">Confirm</bb-modal-footer-button-primary>
         <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
       </bb-modal-footer>
     </div>

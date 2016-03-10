@@ -8,7 +8,7 @@
  * Controller of the otgQualityInsightsApp
  */
 angular.module('otgQualityInsightsApp')
-.controller('MainCtrl', function ($scope, bbModal) {
+.controller('MainCtrl', function ($scope, bbModal, bbToast) {
   
   // all our products for which we run smoke tests
   $scope.products = [
@@ -39,13 +39,15 @@ angular.module('otgQualityInsightsApp')
     //get the count of passing/failed tests
     var testCount = $scope.outcomes.steps.length;
     var passCount = 0;
-    var failCount = 0;
+    
+    // send each failed test to the modal, so we can render a notes field for each one
+    var failedSteps = [];
     
     $scope.outcomes.steps.forEach( function(step) {
       if (step.state == "Pass") {
         passCount++;
       } else if (step.state == "Fail") {
-        failCount++;
+        failedSteps.push(step);
       }
     });
 
@@ -55,8 +57,23 @@ angular.module('otgQualityInsightsApp')
       resolve: {
         testCount: testCount,
         passCount: passCount,
-        failCount: failCount 
+        failedSteps: function() {
+          return failedSteps;
+        }
       }
+    })
+    .result.then( function(steps) {
+      // loop through the failed steps that were just updated in the modal
+      steps.forEach(function (step) {
+        // filter for the original step matching on description
+        $scope.outcomes.steps.filter(function(failedStep) {
+          if (step.description == failedStep.description) {
+            // update the original step data
+            failedStep.notes = step.notes;
+          }
+        });
+      });
+      bbToast.open({message: "Reporting data saved."})
     });
   };
   
@@ -66,7 +83,8 @@ angular.module('otgQualityInsightsApp')
       {
         description: "Create and activate an Outcomes-enabled application form.",
         order: 1,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Access Outcomes application and submit it.",
@@ -76,27 +94,32 @@ angular.module('otgQualityInsightsApp')
       {
         description: "Consider the submitted application in Pending Applications.",
         order: 3,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Access the Request Record and approve the grant.",
         order: 4,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Create and publish a requirement for the grant.",
         order: 5,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Access and submit the requirement via Graceland.",
         order: 6,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Generate Progress Updates for the grant.",
         order: 7,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Submit a Progress Update for the grant.",
@@ -106,24 +129,33 @@ angular.module('otgQualityInsightsApp')
       {
         description: "Verify that the progress update displays in the Funder Dashboard.",
         order: 9,
-        state: ""
+        state: "",
+        notes: ""
       }
     ]
   };
   
 })
-.controller('ModalCtrl', function (testCount, passCount, failCount) {
+.controller('ModalCtrl', function (testCount, passCount, failedSteps, $uibModalInstance) {
   var self = this;
 
   self.testCount = testCount;
   self.passCount = passCount;
-  self.failCount = failCount;
+  self.failedSteps = failedSteps;
+  //set the bootstrap alert message
+  self.alertStatus = '';
 
   self.allPassed = function () {
     if (passCount / testCount == 1) {
+      self.alertStatus = 'success';
       return true;
     } else {
+      self.alertStatus = 'danger';
       return false;
     }
+  };
+  
+  self.save = function() {
+    $uibModalInstance.close(self.failedSteps);
   };
 });
