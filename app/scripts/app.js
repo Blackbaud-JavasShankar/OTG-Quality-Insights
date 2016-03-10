@@ -20,11 +20,11 @@ angular
 ])
 .config(function ($routeProvider) {
   $routeProvider
-    .when('/', {
+    .when('/reporting', {
       templateUrl: 'views/main.html',
       controller: 'MainCtrl'
     })
-    .when('/about', {
+    .when('/buildstatus', {
       templateUrl: 'views/about.html',
       controller: 'AboutCtrl'
     })

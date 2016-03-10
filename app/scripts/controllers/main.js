@@ -73,7 +73,7 @@ angular.module('otgQualityInsightsApp')
           }
         });
       });
-      bbToast.open({message: "Reporting data saved."})
+      bbToast.open({message: "Reporting data saved."});
     });
   };
   
@@ -89,7 +89,8 @@ angular.module('otgQualityInsightsApp')
       {
         description: "Access Outcomes application and submit it.",
         order: 2,
-        state: ""
+        state: "",
+        notes: ""
       },
       {
         description: "Consider the submitted application in Pending Applications.",

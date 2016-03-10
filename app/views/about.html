@@ -1,1 +1,25 @@
-<p>This is the about view.</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="row bb-page-content-multicolumn" bb-layout="layout" bb-tiles="tiles">
+      <div class="col-md-4 bb-page-content-tile-column">
+        <bb-tile bb-tile-header="'Foundation Management'">
+          <div bb-tile-section class="bb-tile-content-section">
+            <div ng-repeat="product in products">
+              <a href=""><h4 style="color: #1f91da">{{ product.name }}</h4></a>
+            </div>
+          </div>
+        </bb-tile>
+      </div>
+      <div class="col-md-4 bb-page-content-tile-column"
+           ng-if="outcomes.currentFailedSteps.length > 0"
+           ng-repeat="step in outcomes.currentFailedSteps">
+        <bb-tile bb-tile-header="'Outstanding Bug'">
+          <div bb-tile-section class="bb-tile-content-section">
+            {{step.description}}<br>
+            {{step.notes}}
+          </div>
+        </bb-tile>
+      </div>
+    </div>
+  </div>
+</div>
