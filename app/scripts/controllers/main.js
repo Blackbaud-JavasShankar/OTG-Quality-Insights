@@ -8,7 +8,7 @@
  * Controller of the otgQualityInsightsApp
  */
 angular.module('otgQualityInsightsApp')
-.controller('MainCtrl', function ($scope) {
+.controller('MainCtrl', function ($scope, bbModal) {
   
   // all our products for which we run smoke tests
   $scope.products = [
@@ -31,6 +31,32 @@ angular.module('otgQualityInsightsApp')
   $scope.changeState = function(selectedItems, state) {
     selectedItems.forEach( function(item) {
       item.state = state;
+    });
+  };
+  
+  //form submission modal
+  $scope.submit = function() {
+    //get the count of passing/failed tests
+    var testCount = $scope.outcomes.steps.length;
+    var passCount = 0;
+    var failCount = 0;
+    
+    $scope.outcomes.steps.forEach( function(step) {
+      if (step.state == "Pass") {
+        passCount++;
+      } else if (step.state == "Fail") {
+        failCount++;
+      }
+    });
+
+    bbModal.open({
+      controller: 'ModalCtrl as modalCtrl',
+      templateUrl: 'demo/modal/modalform.html',
+      resolve: {
+        testCount: testCount,
+        passCount: passCount,
+        failCount: failCount 
+      }
     });
   };
   
@@ -85,4 +111,19 @@ angular.module('otgQualityInsightsApp')
     ]
   };
   
+})
+.controller('ModalCtrl', function (testCount, passCount, failCount) {
+  var self = this;
+
+  self.testCount = testCount;
+  self.passCount = passCount;
+  self.failCount = failCount;
+
+  self.allPassed = function () {
+    if (passCount / testCount == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 });
