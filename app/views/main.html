@@ -13,24 +13,36 @@
       <div class="col-md-8 bb-page-content-tile-column">
         <bb-tile bb-tile-header="'Outcomes'">
           <div bb-tile-section class="bb-tile-content-section">
+            <div class="row" style="margin-bottom: 15px;">
+              <div class="col-md-6">
+                <button class="btn bb-btn-secondary"
+                        ng-disabled="selectedItems.length == 0"
+                        ng-click="changeState(selectedItems, 'Pass')">Pass</button>
+                <button class="btn bb-btn-secondary"
+                        ng-disabled="selectedItems.length == 0"
+                        ng-click="changeState(selectedItems, 'Fail')">Fail</button>
+                <button class="btn bb-btn-secondary"
+                        ng-disabled="selectedItems.length == 0"
+                        ng-click="changeState(selectedItems, '')">Reset</button>
+              </div>
+            </div>
             
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Steps</th>
-                  <th>State</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="step in outcomes.steps">
-                  <td>{{step.description}}</td>
-                  <td>
-                    <input bb-check type="checkbox" ng-model="step.fail" ng-click="toggleState({{step.order}})">
-                    <label style="color: #1dc8a6">Pass</label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <bb-checklist
+              bb-checklist-items="outcomes.steps"
+              bb-checklist-selected-items="selectedItems">
+              <bb-checklist-columns>
+                <bb-checklist-column
+                   bb-checklist-column-caption="'Steps'"
+                   bb-checklist-column-field="'description'"
+                   bb-checklist-column-width="'70%'">
+                </bb-checklist-column>
+                <bb-checklist-column
+                   bb-checklist-column-caption="'State'"
+                   bb-checklist-column-field="'state'"
+                   bb-checklist-column-width="'30%'">
+                </bb-checklist-column>
+              </bb-checklist-columns>
+            </bb-checklist>
 
             <button class="btn btn-primary" ng-click="submit()">Submit</button>
           </div>
