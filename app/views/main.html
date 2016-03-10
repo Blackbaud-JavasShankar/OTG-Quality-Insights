@@ -1,0 +1,41 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="row bb-page-content-multicolumn" bb-layout="layout" bb-tiles="tiles">
+      <div class="col-md-4 bb-page-content-tile-column">
+        <bb-tile bb-tile-header="'Foundation Management'">
+          <div bb-tile-section class="bb-tile-content-section">
+            <div ng-repeat="product in products">
+              <a href=""><h4 style="color: #1f91da">{{ product.name }}</h4></a>
+            </div>
+          </div>
+        </bb-tile>
+      </div>
+      <div class="col-md-8 bb-page-content-tile-column">
+        <bb-tile bb-tile-header="'Outcomes'">
+          <div bb-tile-section class="bb-tile-content-section">
+            
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Steps</th>
+                  <th>State</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="step in outcomes.steps">
+                  <td>{{step.description}}</td>
+                  <td>
+                    <input bb-check type="checkbox" ng-model="step.fail" ng-click="toggleState({{step.order}})">
+                    <label style="color: #1dc8a6">Pass</label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <button class="btn btn-primary" ng-click="submit()">Submit</button>
+          </div>
+        </bb-tile>
+      </div>
+    </div>
+  </div>
+</div>
