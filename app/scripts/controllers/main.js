@@ -14,14 +14,17 @@ angular.module('otgQualityInsightsApp')
   $scope.products = [
     {
       name: "Outcomes",
+      status: "Failed",
       lastUpdated: "2015-11-17T10:15:00"
     },
     {
       name: "GIFTS Online",
+      status: "Passed",
       lastUpdated: "2015-11-17T10:30:00"
     },
     {
       name: "Reviewer Connect",
+      status: "Passed",
       lastUpdated: "2015-11-17T10:45:00"
     }
   ];
@@ -62,18 +65,32 @@ angular.module('otgQualityInsightsApp')
         }
       }
     })
-    .result.then( function(steps) {
+    .result.then( function(data) {
       // loop through the failed steps that were just updated in the modal
-      steps.forEach(function (step) {
+      data.failedSteps.forEach(function (step) {
         // filter for the original step matching on description
         $scope.outcomes.steps.filter(function(failedStep) {
           if (step.description == failedStep.description) {
             // update the original step data
             failedStep.notes = step.notes;
+            
           }
         });
       });
       bbToast.open({message: "Reporting data saved."});
+      if (data.passed) {
+        $scope.products.filter(function(p) {
+          if (p.name == "Outcomes") {
+            p.status = "Passed";
+          }
+        });
+      } else {
+        $scope.products.filter(function(p) {
+          if (p.name == "Outcomes") {
+            p.status = "Failed";
+          }
+        });
+      }
     });
   };
   
@@ -139,16 +156,22 @@ angular.module('otgQualityInsightsApp')
 })
 .controller('ModalCtrl', function (testCount, passCount, failedSteps, $uibModalInstance) {
   var self = this;
-
+  // data to be passed back to parent controller on submit
+  // we send back the updated failedSteps with notes and a boolean value
+  // to update the state of the smoke test to display on the side tile
+  self.data = {
+    failedSteps: failedSteps,
+    passed: false
+  }
   self.testCount = testCount;
   self.passCount = passCount;
-  self.failedSteps = failedSteps;
   //set the bootstrap alert message
   self.alertStatus = '';
 
   self.allPassed = function () {
     if (passCount / testCount == 1) {
       self.alertStatus = 'success';
+      self.data.passed = true
       return true;
     } else {
       self.alertStatus = 'danger';
@@ -157,6 +180,6 @@ angular.module('otgQualityInsightsApp')
   };
   
   self.save = function() {
-    $uibModalInstance.close(self.failedSteps);
+    $uibModalInstance.close(self.data);
   };
 });

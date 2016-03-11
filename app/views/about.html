@@ -4,9 +4,23 @@
       <div class="col-md-4 bb-page-content-tile-column">
         <bb-tile bb-tile-header="'Foundation Management'">
           <div bb-tile-section class="bb-tile-content-section">
-            <div ng-repeat="product in products">
-              <a href=""><h4 style="color: #1f91da">{{ product.name }}</h4></a>
-            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Status</th>
+                  <th>Last Run</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="product in products">
+                  <td><a href="">{{product.name}}</a></td>
+                  <td ng-if="product.status == 'Failed'"style="color:#ef6977">{{product.status}}</td>
+                  <td ng-if="product.status == 'Passed'"style="color:#1dc8a6">{{product.status}}</td>
+                  <td>{{product.lastUpdated | date: 'medium'}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </bb-tile>
       </div>
@@ -15,7 +29,7 @@
            ng-repeat="step in outcomes.currentFailedSteps">
         <bb-tile bb-tile-header="'Outstanding Bug'">
           <div bb-tile-section class="bb-tile-content-section">
-            {{step.description}}<br>
+            <h4>{{step.description}}</h4>
             {{step.notes}}
           </div>
         </bb-tile>

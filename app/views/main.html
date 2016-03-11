@@ -1,15 +1,31 @@
 <div class="container-fluid">
   <div class="row">
     <div class="row bb-page-content-multicolumn" bb-layout="layout" bb-tiles="tiles">
+      
       <div class="col-md-4 bb-page-content-tile-column">
         <bb-tile bb-tile-header="'Foundation Management'">
           <div bb-tile-section class="bb-tile-content-section">
-            <div ng-repeat="product in products">
-              <a href=""><h4 style="color: #1f91da">{{ product.name }}</h4></a>
-            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Status</th>
+                  <th>Last Run</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="product in products">
+                  <td><a href="">{{product.name}}</a></td>
+                  <td ng-if="product.status == 'Failed'"style="color:#ef6977">{{product.status}}</td>
+                  <td ng-if="product.status == 'Passed'"style="color:#1dc8a6">{{product.status}}</td>
+                  <td>{{product.lastUpdated | date: 'medium'}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </bb-tile>
       </div>
+      
       <div class="col-md-8 bb-page-content-tile-column">
         <bb-tile bb-tile-header="'Outcomes'">
           <div bb-tile-section class="bb-tile-content-section">
@@ -69,8 +85,8 @@
               {{modalCtrl.passCount}} / {{modalCtrl.testCount}} tests are passing.
             </bb-alert>
 
-            <div ng-if="modalCtrl.failedSteps.length > 0"
-                 ng-repeat="step in modalCtrl.failedSteps">
+            <div ng-if="modalCtrl.data.failedSteps.length > 0"
+                 ng-repeat="step in modalCtrl.data.failedSteps">
               <h4>Step {{step.order}} - {{step.description}}</h4>
               <textarea class="form-control" ng-model="step.notes" />
             </div>

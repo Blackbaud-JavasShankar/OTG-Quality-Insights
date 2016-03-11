@@ -12,14 +12,17 @@ angular.module('otgQualityInsightsApp')
     $scope.products = [
       {
         name: "Outcomes",
+        status: 'Failed',
         lastUpdated: "2015-11-17T10:15:00"
       },
       {
         name: "GIFTS Online",
+        status: 'Passed',
         lastUpdated: "2015-11-17T10:30:00"
       },
       {
         name: "Reviewer Connect",
+        status: 'Passed',
         lastUpdated: "2015-11-17T10:45:00"
       }
     ];
@@ -30,19 +33,7 @@ angular.module('otgQualityInsightsApp')
           description: "Create and activate an Outcomes-enabled application form.",
           order: 1,
           state: "Fail",
-          notes: "This didn't work for some dumb reason."
-        },
-        {
-          description: "Access Outcomes application and submit it.",
-          order: 2,
-          state: "Fail",
-          notes: "This is also not working."
-        },
-        {
-          description: "Consider the submitted application in Pending Applications.",
-          order: 3,
-          state: "Fail",
-          notes: "This is totally busted."
+          notes: "Repro Steps: 1. Create an Outcomes Application Form 2. Attempt to Activate it Expected Results: 1. Should activate and display URL Actual Results: 1. Throws System Error #282544 [7:49] FM: Error when Activating Outcomes Application Form"
         }
       ]
     };
